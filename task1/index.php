@@ -82,7 +82,7 @@ function checkWorker($key) {
 }
 
 function nearAreasSearch($nearArea) {
-    global $areas, $workers;
+    global $areas;
 
     for ($nearIndex = 0; $nearIndex < count($nearArea); $nearIndex++) {
         $nearAreaName = $areas[$nearArea[$nearIndex]];
@@ -96,37 +96,66 @@ function nearAreasSearch($nearArea) {
 
 }
 
+// function getWorkerByArea($area) { //!refactor
+//     global $workers, $nearby, $areas;
+
+//     $key = getAreaKey($area);
+
+//     if (!$key) {
+//         echo 'Такого раиона нет';
+//     } else {
+//         echo 'Район ' . $area;
+
+//         if (checkWorker($key)) {
+//             return '<br>'.checkWorker($key);
+//         }
+
+//         $near = getNearAreas($key);
+
+//         $deeperSearch = nearAreasSearch($near);
+
+//         if ($deeperSearch == false) {
+
+//             for ($nearIndex = 0; $nearIndex < count($near); $nearIndex++) {
+                
+//                 $nearAreaName = $areas[$near[$nearIndex]];
+//                 $key = getAreaKey($nearAreaName);
+//                 $near = getNearAreas($key);
+
+//                 return nearAreasSearch($near);
+//             }
+//         } else {
+//             return $deeperSearch;
+//         }
+//     }
+// }
+
 function getWorkerByArea($area) {
     global $workers, $nearby, $areas;
 
     $key = getAreaKey($area);
 
-    if (!$key) {
+    echo 'Район ' . $area;
+
+    if (!$key) {    // проверяем существует ли район 
         echo 'Такого раиона нет';
-    } else {
-        echo 'Район ' . $area;
+        return null;
+    }
 
-        if (checkWorker($key)) {
-            return '<br>'.checkWorker($key);
-        }
+    if (checkWorker($key)) {    // проверяем на прямые совпадения
+        return '<br>'.checkWorker($key);
+    }
 
-        $near = getNearAreas($key);
+    $near = getNearAreas($key);
 
-        $deeperSearch = nearAreasSearch($near);
+    if (NearAreasSearch($near)) {
+        return nearAreasSearch($near);
+    }
 
-        if ($deeperSearch == false) {
+    for ($nearIndex = 0; $nearIndex < count($near); $nearIndex++) {
+        $far = getNearAreas($near[$nearIndex]);
 
-            for ($nearIndex = 0; $nearIndex < count($near); $nearIndex++) {
-                
-                $nearAreaName = $areas[$near[$nearIndex]];
-                $key = getAreaKey($nearAreaName);
-                $near = getNearAreas($key);
-
-                return nearAreasSearch($near);
-            }
-        } else {
-            return $deeperSearch;
-        }
+        return nearAreasSearch($far);
     }
 }
 
