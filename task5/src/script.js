@@ -68,14 +68,13 @@ $(document).ready(() => {
                 }
             }
 
-            $('#participants').val('');
+            $('#participants').val(''); // очищаю строку ввода
 
-/*
+        /*
 
             Изначально хотел использовать axios, но воврея одумался
 
-*/
-
+        */
 
             $.ajax({
                 url: '../api/score.php',
