@@ -1,8 +1,27 @@
 $(document).ready(() => {
-    console.log("DOM fully loaded and parsed");
 
-    let table = $('#tbody');
-    let currentId = 1;
+    let currentId = 1; // 
+
+    /*
+
+        Я посчитал, что нет необходимости доставать id из предыдущей строки, так как она может быть отсортирована.
+        Я сделалпеременную, хранящую последний записаный id и использую именно его при обавлении новых строк
+
+    */
+
+    const modal = document.getElementById('Modal');
+
+    const openModal = (modalWindow) => {
+        modalWindow.classList.add('show');
+        modalWindow.style.display = 'block';
+        document.body.classList.add('modal-open'); 
+    }
+
+    const closeModal = (modalWindow) => {
+        modalWindow.classList.remove('show');
+        modalWindow.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
 
     const addRow = (object) => {
         let newRow = $('<tr>');
@@ -12,14 +31,51 @@ $(document).ready(() => {
         currentId++;
 
         newRow.append(newId, newName, newScore);
+        $('#tbody').append(newRow);
+    }
 
-        table.append(newRow);
+    const checkValidName = (name) => { // проверка на правильность введенного имени с помощью регулярных выражений
+        const regExpPattern = /^[А-ЯЁ][а-яё]+$/;
+
+        return regExpPattern.test(name);
     }
 
     $('#addParticipants').on({
-        click: (e) => {
-            e.preventDefault();
+        'click keypress': (e) => { // jQuery предоставляет готовый метод для обработки нескольких событий
+            e.preventDefault(); // отключаю событие по умолчанию
             let participants = $('#participants').val();
+            let participantsCheck = participants.split(', ');
+
+            if (participants.length == 0) {
+                $('#ModalBody').text('Вы не ввели участников! Пожалуйста, введите участников и повторите попытку.');
+                openModal(modal);
+                $('#closeModal').click(() => {
+                    closeModal(modal);
+                })
+                return;
+            }
+
+            for (let i = 0; i < participantsCheck.length; i++) {
+                if (!checkValidName(participantsCheck[i])) {
+                    $('#ModalBody').text('Неверно введены данные! Имена не должны содержать пробелы, знаки препинания или латинские символы.' +
+                    ' Каждое имя должно начинаться с заглавной буквы.' +
+                    ' После каждой запятой, разделяющей имена, должна быть запятая. Пример: "Владимир, Иван"');
+                    openModal(modal);
+                    $('#closeModal').click(() => {
+                        closeModal(modal);
+                    })
+                    return;
+                }
+            }
+
+            $('#participants').val('');
+
+/*
+
+            Изначально хотел использовать axios, но воврея одумался
+
+*/
+
 
             $.ajax({
                 url: '../api/score.php',
@@ -32,64 +88,19 @@ $(document).ready(() => {
                     let response = JSON.parse(data);
 
                     for (let i = 0; i < response.length; i++) {
-                        console.log(response[i]);
                         addRow(response[i], currentId);
                     }
                 },
 
                 error: (err) => {
                     console.log(err);
+                    $('#ModalBody').text('Произошла ошибка во время запроса!');
+                    openModal(modal);
+                    $('#closeModal').click(() => {
+                        closeModal(modal);
+                    })
                 }
             })
         }
     });
-
-    let rows = table.find('tr').toArray();
-
-    const tableSort = {
-        id: $('#id'),
-        name: $('#name'),
-        score: $('#score'),
-        //rows: table.find('tr').toArray(),
-
-        methods: {
-            sortId: () => {
-                rows.sort((a, b) => {
-                    let idA = parseInt($(a).find('th').text());
-                    let idB = parseInt($(b).find('th').text());
-                    return idA - idB;
-                  });
-                  table.empty();
-                  table.append(this.rows);
-            },
-
-            sortName: () => {
-                rows.sort((a, b) => {
-                    let nameA = $(a).find('td').text();
-                    let nameB = $(b).find('td').text();
-                    
-                    if (nameA < nameB) return -1;
-                    if (nameA > nameB) return 1;
-                    return 0;
-                });
-                table.empty();
-                table.append(this.rows);
-            },
-
-            sortScore: () => {
-                rows.sort((a, b) => {
-                    let scoreA = parseInt($(a).find('td').text());
-                    let scoreB = parseInt($(b).find('td').text());
-                    return scoreA - scoreB;
-                });
-                table.empty();
-                table.append(this.rows);
-            }
-        }
-    }
-
-    tableSort.id.click(tableSort.methods.sortId);
-    tableSort.name.click(tableSort.methods.sortName);
-    tableSort.score.click(tableSort.methods.sortScore);
-
 })

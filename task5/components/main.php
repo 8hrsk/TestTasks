@@ -15,3 +15,7 @@
 <!-- popover/Modal -->
 
 </div>
+
+<?php
+    require 'components/modal.php';
+?>
