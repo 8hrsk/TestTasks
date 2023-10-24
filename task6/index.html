@@ -4,14 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Картошечка</title>
-    <script src="./src/script.js defer"></script>
+    <script src="./src/script.js"></script>
     <link rel="stylesheet" href="./src/bootstrap.min.css">
     <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
     <div class="layout">
 
+        <nav class="mobileNavHover">
+            <div class="nav">
+                <a href="">Цены</a>
+                <a href="">Видео</a>
+                <a href="">О нас</a>
+                <a>Оставить заявку</a>
+            </div>
+            <div class="potato">
+                <h1>КАРТОШЕЧКА</h1>
+            </div>
+            <div class="networks">
+                <span class="network vk"></span>
+                <span class="network facebook"></span>
+                <span class="network twitter"></span>
+                <span class="network instagram"></span>
+            </div>
+        </nav>
+
         <header>
+            <nav class="mobileNav" id="mobileNav">
+                <img src="./src/img/navbar.svg" id="mobileNavImg">
+            </nav>
             <nav class="navbar">
                 <img src="./src/img/logo.png" class="logo">
                 <ul>
@@ -35,7 +56,13 @@
             <h1 class="underlineMain">Цены</h1>
             <div class="container">
                 <div class="itemContainer">
-                    <div class="item"></div>
+                    <span class="sliderLeft"></span>
+                    <div class="subContainer">
+                        <div class="item1"></div>
+                        <div class="itemText">Столовый картофель</div>
+                        <div class="itemTextVal">142 ₽</div>
+                    </div>
+                    <span class="sliderRight"></span>
                 </div>
                 <div class="videoContainer">
                     <h1 class="underlineMain">Видео</h1>
@@ -48,7 +75,8 @@
 
             <div class="aboutUs">
                 <h1 class="underlineMain">О нас</h1>
-                <div class="conatinerAbout">
+                <div class="cook"></div>
+                <div class="containerAbout">
                     <div class="cook"></div>
                     <div class="text">
                         <h5>
@@ -71,6 +99,9 @@
                         </h5>
                     </div>
                 </div>
+            </div>
+
+            <div class="contacts">
                 <div class="containerContacts">
                     <h6>Оставить заявку</h6>
                     <div class="form-group">
