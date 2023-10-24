@@ -1,5 +1,7 @@
 <?php
 
+require_once './Shipment.php';
+
 class russianPost extends Shipment {
     private $RPServiceData;
 
