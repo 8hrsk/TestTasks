@@ -7,6 +7,12 @@
 require './DHL.php';
 require './russianPost.php';
 
+/*
+
+    Так же для автоопределения можно использовать use namespace и соответствующую функцию,
+    но я пока мало знаком с этой темой, хоть и имею понимание, как она работает.
+
+*/
 
 $dhl = new DHL();
 $russianPost = new russianPost();
